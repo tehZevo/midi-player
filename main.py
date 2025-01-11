@@ -49,10 +49,10 @@ def handle_listen_message(message):
         sleep_remaining = SLEEP_TIME
 
 def shhh():
-    #sus
-    out_port.send(Message("control_change", control=64, value=0, channel=0))
-    for n in range(128):
-        out_port.send(Message("note_off", note=n))
+    for c in range(16):
+        out_port.send(Message("control_change", control=64, value=0, channel=c))
+        for n in range(128):
+            out_port.send(Message("note_off", note=n))
 
 def play():
     global sleep_remaining
@@ -93,8 +93,7 @@ def main():
     print("Ready!")
     
     while True:
-        #reset sustain
-        out_port.send(Message("control_change", control=64, value=0, channel=0))
+        shhh()
         play()
 
 if __name__ == "__main__":
