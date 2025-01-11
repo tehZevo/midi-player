@@ -19,6 +19,7 @@ LISTEN_DEVICE = config.get("listen_device", None)
 SLEEP_TIME = config.get("sleep_time", 10)
 MIDI_DIR = config.get("midi_dir", "songs")
 RESUME = config.get("resume", False)
+TRANSPOSE = config.get("transpose", 0)
 
 sleep_remaining = 0
 
@@ -64,6 +65,8 @@ def play():
     print("Playing", song, "...")
     mid = mido.MidiFile(song)
     for msg in mid.play():
+        if msg.type == "note_on" or msg.type == "note_off":
+            msg.note += TRANSPOSE
         out_port.send(msg)
         if sleep_remaining > 0:
             shhh()
