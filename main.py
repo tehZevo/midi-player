@@ -1,6 +1,3 @@
-#TODO: transpose
-#TODO: bpm override/scale
-
 import glob
 import random
 import mido
@@ -63,7 +60,7 @@ def play():
     songs = glob.glob(f"{MIDI_DIR}/*.mid")
     song = random.choice(songs)
     print("Playing", song, "...")
-    mid = mido.MidiFile(song)
+    mid = mido.MidiFile(song) 
     for msg in mid.play():
         if msg.type == "note_on" or msg.type == "note_off":
             msg.note += TRANSPOSE
