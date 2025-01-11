@@ -2,3 +2,5 @@ output_device: "player-out"
 listen_device: "loopmidi port"
 sleep_time: 5
 midi_dir: "songs"
+#if true, resume playing rather than skip to next song
+resume: false

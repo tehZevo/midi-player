@@ -18,6 +18,7 @@ OUTPUT_DEVICE = config.get("output_device", "loopMIDI Port")
 LISTEN_DEVICE = config.get("listen_device", None)
 SLEEP_TIME = config.get("sleep_time", 10)
 MIDI_DIR = config.get("midi_dir", "songs")
+RESUME = config.get("resume", False)
 
 sleep_remaining = 0
 
@@ -45,7 +46,8 @@ def handle_listen_message(message):
     global sleep_remaining
     
     if message.type == "note_on" and message.velocity > 0:
-        print("Pausing for", SLEEP_TIME, "seconds...")
+        if sleep_remaining <= 0:
+            print("Pausing until", SLEEP_TIME, "seconds after manual play stops...")
         sleep_remaining = SLEEP_TIME
 
 def shhh():
@@ -69,6 +71,8 @@ def play():
                 time.sleep(1)
                 sleep_remaining -= 1
             print("Resuming...")
+            if not RESUME:
+                break
 
 def main():
     global out_port
