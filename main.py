@@ -46,8 +46,9 @@ def handle_listen_message(message):
     if message.type == "note_on" and message.velocity > 0:
         if sleep_remaining <= 0:
             print("Pausing until", SLEEP_TIME, "seconds after manual play stops...")
+            shhh()
         sleep_remaining = SLEEP_TIME
-
+        
 def shhh():
     for c in range(16):
         out_port.send(Message("control_change", control=64, value=0, channel=c))
@@ -62,17 +63,18 @@ def play():
     print("Playing", song, "...")
     mid = mido.MidiFile(song) 
     for msg in mid.play():
-        if msg.type == "note_on" or msg.type == "note_off":
-            msg.note += TRANSPOSE
-        out_port.send(msg)
         if sleep_remaining > 0:
-            shhh()
             while sleep_remaining > 0:
                 time.sleep(1)
                 sleep_remaining -= 1
             print("Resuming...")
             if not RESUME:
                 break
+        
+        if msg.type == "note_on" or msg.type == "note_off":
+            msg.note += TRANSPOSE
+        out_port.send(msg)
+        
 
 def main():
     global out_port
